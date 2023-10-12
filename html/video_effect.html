@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    	/* Refers to video outer container */
+        *{
+            margin: 0;
+            padding: 0;
+        }
+	div.video {
+		position: sticky;
+		height: 80vmin;
+		top: 10vmin;
+        width: 99vw;
+	}
+	
+	/* Referes to video itself */
+	div.video video {
+		height: 80vmin;
+	}
+	
+	.container {
+		display: block;
+		background: gray;
+		width: fit-content;
+	}
+</style>
+<body>
+
+    <p>dummy</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <div class="container" style="height: 4000px;">
+      <div class="video">
+        <video width="1000" height="1000" muted preload>
+            <!-- <source src="/Videos/demo.webm" type="video/webm"> -->
+            <source src="/Videos/Lines Digital Abstract Background.mp4" type="video/webm">
+            <!-- <source src="https://johnnette.com/video/home/combined-video.mp4" type="video/mp4"> -->
+      </div>
+    </div>
+    <p>dummy</p>
+    <p>Test</p>
+    <p>Test</p>
+    <p>Test</p>
+    <p>Test</p>
+    <p>Test</p>
+    
+    <script>
+    var playbackConstant = 600;   // lower numbers = faster playback
+    var video = 'video';
+		var videoContainer = '.container';
+
+		// Setup the scroll effect for the AAPI-Chart video
+		setupScrollPlayVideo(video, videoContainer, playbackConstant);
+
+
+		window.addEventListener('scroll', () => 
+		{
+				// Chart Animation
+				// Advance frames of video for animation
+				updateVideoPosition(video, getPercentScrolled(videoContainer));
+    });
+
+
+/**
+* Updates the video play position based on scroll percentage
+* @param {*} video             Video element to update
+* @param {*} scrollPosition    Scroll position (0 to 100)
+*/
+function updateVideoPosition(video, scrollPosition)
+{
+	  // Select video element         
+    var vid = document.querySelector(video);
+	
+		// Only proceed if the video and metadata has been loaded
+		if(!Number.isNaN(vid.duration))
+		{
+			  // Calculate the video position based on the scroll position
+				//vid.currentTime = vid.duration * (scrollPosition / 100);
+			
+				// Use requestAnimationFrame for smooth playback
+				function scrollPlay()
+				{
+						vid.currentTime = vid.duration * (scrollPosition / 80);
+						// vid.currentTime = vid.duration * (scrollPosition / 8);
+						window.requestAnimationFrame(scrollPlay);
+				}
+
+				window.requestAnimationFrame(scrollPlay);	
+		}
+}
+
+
+function getPercentScrolled(container)
+{
+    container = document.querySelector(container).getBoundingClientRect();
+
+    let scrollPosition = -container.top;
+    let scrollHeight = container.height - window.innerHeight;
+
+    let percentScrolled = (scrollPosition / scrollHeight) * 100;
+    if (percentScrolled > 100) percentScrolled = 100;
+    else if (percentScrolled < 0) percentScrolled = 0;
+
+
+    return percentScrolled;
+}
+
+
+function setupScrollPlayVideo(video, stickyContainer, scrollConstant)
+{
+    // get reference to video's scroll container to set it's height based on the video duration
+    var setHeight = document.querySelector(stickyContainer);
+
+    // select video element         
+    var vid = document.querySelector(video);
+
+    // dynamically set the page height according to video length
+    vid.addEventListener('loadedmetadata', function ()
+    {
+        setHeight.style.height = Math.floor(vid.duration) * scrollConstant + "px";
+    });
+}
+
+
+function injectClassIntoParentContainer(elementSelector, selector, removeFromElement = false)
+{
+		var element = document.querySelector(elementSelector);
+		
+		if (element !== null)
+		{
+				element.parentNode.classList.add(selector);
+
+				if (removeFromElement === true)
+						element.classList.remove(selector);
+		}
+		else
+				console.log("Warning: cannot find element: ", element);
+}
+
+    </script>
+</body>
+</html>
+
